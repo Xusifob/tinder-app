@@ -1,0 +1,9 @@
+{
+  "require" : {
+    "xusifob/router": "dev-master",
+    "guzzlehttp/guzzle" : "6.3.3",
+    "ext-json" : "*",
+    "php" : "7.3"
+  },
+  "minimum-stability": "dev"
+}

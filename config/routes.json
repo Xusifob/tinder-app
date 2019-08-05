@@ -1,0 +1,63 @@
+{
+  "namespace" : "Xusifob",
+  "path" : "/",
+  "routes" : {
+    "login": {
+      "path": "",
+      "type": ["GET","POST"],
+      "class": "TinderController",
+      "method": "loginAction",
+      "visible" : true
+    },
+    "home": {
+      "path": "home",
+      "type": ["GET","POST"],
+      "class": "TinderController",
+      "method": "loginAction",
+      "visible" : true
+    },
+    "logout": {
+      "path": "logout",
+      "type": ["GET"],
+      "class": "TinderController",
+      "method": "logoutAction",
+      "visible" : true
+    },
+    "dashboard": {
+      "path": "dashboard",
+      "type": ["GET","POST"],
+      "class": "TinderController",
+      "method": "dashboardAction"
+    },
+    "update_profil": {
+      "path": "api/profile/update",
+      "type": ["POST"],
+      "class": "TinderController",
+      "method": "updateProfile"
+    },
+    "matches": {
+      "path": "api/matches",
+      "type": "GET",
+      "class": "TinderController",
+      "method": "matchesAction"
+    },
+    "golds": {
+      "path": "api/golds",
+      "type": "GET",
+      "class": "TinderController",
+      "method": "goldsAction"
+    },
+    "profile": {
+      "path": "api/profile",
+      "type": "GET",
+      "class": "TinderController",
+      "method": "myProfileAction"
+    },
+    "api_action": {
+      "path": "api/action/:id",
+      "type": ["POST"],
+      "class": "TinderController",
+      "method": "tinderActionAction"
+    }
+  }
+}
