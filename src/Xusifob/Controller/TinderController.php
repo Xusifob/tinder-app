@@ -63,7 +63,7 @@ class TinderController extends Controller
         $router = $this->getData('router');
 
         if(isset($_POST['X-Auth-Token'])) {
-            setcookie('token',$_POST['X-Auth-Token']);
+            $this->setToken($_POST['X-Auth-Token']);
             return new RedirectResponse($router->generateUrl('home'));
         }
 
@@ -72,7 +72,8 @@ class TinderController extends Controller
         }
 
         return $this->loadView('login',array(
-            'token' => $security->getCurrentUser()
+            'token' => $security->getCurrentUser(),
+            'title' => 'Login - TinderApp'
         ));
     }
 
@@ -92,6 +93,8 @@ class TinderController extends Controller
 
 
         setcookie('token',"",time()-1000);
+        setcookie('refresh_token',"",time()-1000);
+        setcookie('phone_number',"",time()-1000);
         return new RedirectResponse($router->generateUrl('home'));
 
     }
@@ -106,6 +109,7 @@ class TinderController extends Controller
 
         return $this->loadView('dashboard',array(
             'google_api_key' => $this->getData('google_api_key'),
+            'title' => 'Dashboard - TinderApp'
         ));
     }
 
@@ -118,6 +122,119 @@ class TinderController extends Controller
         $informations = $this->tinderService->getMyProfile();
 
         return new JsonResponse($informations);
+
+    }
+
+
+    /**
+     * @param array $matches
+     *
+     * @return Response
+     */
+    public function loginSMSAction($matches = array())
+    {
+
+        $router = $this->getData('router');
+
+
+        if(!isset($_POST['tel'])) {
+            return  new RedirectResponse($router->generateUrl('home'));
+        }
+
+        $tel = $_POST['tel'];
+
+
+        $response = $this->tinderService->authBySMS($tel);
+
+        if(!$response['data']['sms_sent']) {
+            return  new RedirectResponse($router->generateUrl('home'));
+        }
+
+
+        return $this->loadView('login-sms',array(
+            'title' => 'Login via SMS - TinderApp',
+            'tel' => $tel,
+        ));
+    }
+
+
+    /**
+     * @param array $matches
+     *
+     * @return Response
+     */
+    public function loginSMSConfirmAction($matches = array())
+    {
+
+        /** @var Router $router */
+        $router = $this->getData('router');
+
+
+        if(!isset($_POST['code'])) {
+            return  new RedirectResponse($router->generateUrl('home'));
+        }
+
+        if(!isset($_POST['tel'])) {
+            return  new RedirectResponse($router->generateUrl('home'));
+        }
+
+        $code = $_POST['code'];
+        $tel = $_POST['tel'];
+
+
+        $response = $this->tinderService->confirmAuthBySMS($tel,$code);
+
+
+        if(!$response['data']['validated']) {
+            return  new RedirectResponse($router->generateUrl('home'));
+        }
+
+        $this->setCookie('refresh_token',$response['data']['refresh_token']);
+        $this->setCookie('phone_number',$_POST['tel']);
+
+        return  new Response('<script>location.href= "' . $router->generateUrl('login_cookies') . '"</script>');
+
+    }
+
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function setCookie($key,$value)
+    {
+        setcookie($key,$value,time()+365*60*60*24,"/");
+    }
+
+
+    /**
+     * @param array $matches
+     *
+     * @return Response
+     */
+    public function loginViaCookiesAction($matches = array())
+    {
+
+        /** @var Router $router */
+        $router = $this->getData('router');
+
+        $token = $this->tinderService->loginViaCookies();
+
+        if($token) {
+            $this->setToken($token);
+            return  new RedirectResponse($router->generateUrl('dashboard'));
+        }
+
+        return  new RedirectResponse($router->generateUrl('home'));
+    }
+
+
+    /**
+     * @param $token
+     */
+    public function setToken($token)
+    {
+        $this->setCookie('token',$token);
 
     }
 
@@ -211,6 +328,8 @@ class TinderController extends Controller
         $template = (__DIR__ . "/../Ressources/views/$template.php");
 
         extract($data);
+
+        $router = $this->getData('router');
 
         if(!file_exists($template)) {
             throw  new FileNotFoundException($template);

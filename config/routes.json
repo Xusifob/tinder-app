@@ -16,6 +16,27 @@
       "method": "loginAction",
       "visible" : true
     },
+    "login_sms": {
+      "path": "login/sms",
+      "type": ["POST","GET"],
+      "class": "TinderController",
+      "method": "loginSMSAction",
+      "visible" : true
+    },
+    "login_cookies": {
+      "path": "login/cookies",
+      "type": ["GET"],
+      "class": "TinderController",
+      "method": "loginViaCookiesAction",
+      "visible" : true
+    },
+    "login_sms_confirm": {
+      "path": "login/sms/confirm",
+      "type": ["GET","POST"],
+      "class": "TinderController",
+      "method": "loginSMSConfirmAction",
+      "visible" : true
+    },
     "logout": {
       "path": "logout",
       "type": ["GET"],

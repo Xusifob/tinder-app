@@ -98,9 +98,65 @@ class TinderApiService
      */
     public function superLike($user_id,$s_number)
     {
-        return $this->get('https://api.gotinder.com/like/' . $user_id . '/super?s_number=' . $s_number);
+        return $this->post('https://api.gotinder.com/like/' . $user_id . '/super',array('s_number' => $s_number));
     }
 
+
+    /**
+     * @param $number
+     * @return mixed
+     */
+    public function authBySMS($number)
+    {
+        $number = str_replace(array('+','-',' '),'',$number);
+
+        return $this->post('auth/sms/send?auth_type=sms&locale=fr',array(
+            'phone_number' => $number,
+        ));
+    }
+
+    /**
+     * @param $number
+     * @return mixed
+     */
+    public function confirmAuthBySMS($number,$code)
+    {
+        $number = str_replace(array('+','-',' '),'',$number);
+
+        return $this->post('auth/sms/validate?auth_type=sms&locale=fr',array(
+            'phone_number' => $number,
+            'otp_code' => $code,
+            'is_update' => false
+        ));
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function loginViaCookies()
+    {
+        $refresh_token = $_COOKIE['refresh_token'];
+        $tel = $_COOKIE['phone_number'];
+
+        if(!$refresh_token || !$tel) {
+            return false;
+        }
+
+
+        $response = $this->post('auth/login/sms?locale=fr',array(
+            'refresh_token' => $refresh_token,
+            'phone_number' => $tel,
+        ));
+
+
+        if($response['data']['api_token']) {
+            return $response['data']['api_token'];
+        }
+
+        return false;
+
+    }
 
 
     /**

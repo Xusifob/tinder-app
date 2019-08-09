@@ -38,6 +38,7 @@ $security = new \Xusifob\Services\TinderSecurity($token);
 // An array of data to send to the controllers
 
 
+
 try {
     $router = new Router($_GET['url'], __DIR__ . "/config/routes.json", $security);
 
@@ -56,4 +57,8 @@ catch (\Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException $e
     $redirect =  new \Symfony\Component\HttpFoundation\RedirectResponse($router->generateUrl('home'));
     $redirect->send();
     die();
+}
+catch (\GuzzleHttp\Exception\ClientException $e) {
+    $response = new \Symfony\Component\HttpFoundation\Response($e->getMessage(),$e->getCode());
+    $response->send();
 }

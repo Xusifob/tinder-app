@@ -7,10 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php if(isset($title)) echo $title; ?></title>
 
+    <base href="<?php echo $router->basePath; ?>">
+
+
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="public/css/jquery.json-viewer.css">
     <link rel="stylesheet" href="public/css/owl.carousel.min.css">
     <link rel="stylesheet" href="public/css/owl.theme.default.min.css">
+    <link href="public/css/all.css" rel="stylesheet"> <!--load all styles -->
+    <link  rel="icon" type="image/png" href="public/images/favicon.png"/>
+
+    <style type="text/css">
+        .mg-top-100 {
+            margin-top: 100px;
+        }
+    </style>
 
 </head>
 <body>
@@ -25,6 +36,7 @@
         let google_api_key = '<?php echo $google_api_key; ?>';
     </script>
 <?php } ?>
+
 
 
 <script type="text/javascript">
