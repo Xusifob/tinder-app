@@ -52,25 +52,58 @@ $('#geoloc-form').on('submit',function (e) {
 });
 
 
+$('#bot-form').on('submit',function(e) {
+
+    let data = $(this).serializeArray();
+
+    localStorage.setItem('bot',JSON.stringify(data));
+
+    e.preventDefault();
+
+
+});
+
 $(document).ready(function () {
     loadMatches();
     loadGold();
     loadFavorites();
     loadProfile();
 
+    loadBotInfos();
 });
 
+
+function loadBotInfos() {
+
+    let bot = getLocalStorage('bot');
+
+    console.log(bot);
+
+    $.each(bot,function (k, v) {
+        let input = $('#bot-form #' + v.name);
+
+        if(input.is(':checkbox')) {
+            if(v.value == "on") {
+                input.attr('checked','checked');
+            }
+        } else {
+            input.val(v.value);
+        }
+
+    })
+
+}
 
 
 function loadFavorites() {
 
-   let favorites = getLocalStorage('favorites');
+    let favorites = getLocalStorage('favorites');
 
-   if(!Object.keys(favorites).length) {
-       $('.favorite-profiles').hide();
-   } else {
-       $('.favorite-profiles').show();
-   }
+    if(!Object.keys(favorites).length) {
+        $('.favorite-profiles').hide();
+    } else {
+        $('.favorite-profiles').show();
+    }
 
     displayMatches('favorites',{
         data : {
@@ -123,13 +156,23 @@ function handle401(response) {
 /**
  *
  */
-function loadMatches() {
+function loadMatches(wipe) {
     $.getJSON('api/matches',function (data) {
 
-        displayMatches('matches',data);
+        displayMatches('matches',data,wipe);
 
-        // Launch the bot after loading
-         //   $('.start-bot').click();
+        location.hash = '#matches-section';
+
+        let bot = getLocalStorage('bot');
+
+        $.each(bot,function (k, v) {
+            if(v.name === 'auto' && "on" === v.value) {
+                // Launch the bot after loading
+                $('.start-bot').click();
+                return;
+            }
+        })
+
 
     }).fail(function (response) {
         handle401(response);
@@ -205,14 +248,18 @@ $('body').on('click','.remove-from-favorite',function () {
  *
  * @param id
  * @param data
+ * @param wipe
  */
-function displayMatches(id,data)
+function displayMatches(id,data,wipe)
 {
+
     let wrapper = $('#' + id);
 
     let template = $('.'+ id +'-template');
 
-    wrapper.html('');
+    if(true === wipe) {
+        wrapper.html('');
+    }
 
     $('#'+ id +'-nb').html(data.data.results.length);
 
@@ -295,12 +342,19 @@ $('.start-bot').on('click',function () {
 
     let profiles = $('#matches .user');
 
+
+    profiles.each(function (k,profile) {
+        doBotAction(profile);
+    });
+
+    profiles = $('#matches .to-pass');
+
     let i = 0;
+
     let $interval = setInterval(function () {
 
         if(profiles[i]) {
-
-            doBotAction(profiles[i]);
+            $(profiles[i]).find('[data-action="unlike"]').click();
 
         } else {
             clearInterval($interval);
@@ -317,13 +371,53 @@ $('.start-bot').on('click',function () {
 function doBotAction(profile)
 {
 
+    let bot = getLocalStorage('bot');
+
+    let to_pass = false;
+
     profile = $(profile);
 
-    let data = $(profile).data('profile');
+    let data = profile.data('profile');
 
-    // Block people with no bio
-    if(!data.user.bio) {
-        profile.find('[data-action="unlike"]').click();
+    let bio = data.user.bio;
+
+    $.each(bot,function (k, v) {
+
+        if(v.name === 'only_with_description' && v.value === 'on') {
+            if(!bio) {
+                to_pass = true;
+                return;
+            }
+        }
+
+        if(to_pass) {
+            return;
+        }
+
+        if(v.name === "words_to_exclude") {
+            let words = v.value.split("\n");
+
+            bio = bio.trim();
+
+            $.each(words,function (k, word) {
+                let regex = new RegExp(word,'gmi');
+
+                console.log(bio.match(regex),bio,regex);
+
+                if(bio.match(regex)) {
+                    to_pass = true;
+                }
+
+            })
+
+        }
+
+    });
+
+
+
+    if(to_pass) {
+        profile.addClass('to-pass');
     }
 
 }

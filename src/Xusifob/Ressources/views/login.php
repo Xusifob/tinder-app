@@ -15,7 +15,7 @@
 
 <div class="container mg-top-100">
     <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-12 offset-0 offset-md-3 col-md-6">
             <form method="POST" action="login/sms" class="jumbotron">
                 <h4 class="text-center">Connectez-vous à votre compte Tinder</h4>
                 <p class="text-center">Entrez votre numéro de téléphone pour vous connecter à votre compte</p>

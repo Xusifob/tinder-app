@@ -42,7 +42,6 @@ class TinderController extends Controller
     {
         parent::__construct($data);
 
-
         $this->tinderService = $this->getData('tinder_api');
 
     }
@@ -92,10 +91,11 @@ class TinderController extends Controller
         $router = $this->getData('router');
 
 
-        setcookie('token',"",time()-1000);
-        setcookie('refresh_token',"",time()-1000);
-        setcookie('phone_number',"",time()-1000);
-        return new RedirectResponse($router->generateUrl('home'));
+        setcookie('token',"",time()-1000,"/");
+        setcookie('refresh_token',"",time()-1000,"/");
+        setcookie('phone_number',"",time()-1000,"/");
+
+        return  new Response('<script>location.href= "' . $router->generateUrl('home') . '"</script>');
 
     }
 
@@ -225,7 +225,7 @@ class TinderController extends Controller
             return  new RedirectResponse($router->generateUrl('dashboard'));
         }
 
-        return  new RedirectResponse($router->generateUrl('home'));
+        return  new RedirectResponse($router->generateUrl('logout'));
     }
 
 

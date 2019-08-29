@@ -16,6 +16,10 @@
         background: red;
     }
 
+    .to-pass {
+        box-shadow: 0 0 20px 3px rgba(255, 0, 0, 0.66);
+    }
+
     .alert-superlike {
         background: #0d29ff;
     }
@@ -50,6 +54,18 @@
         float: right;
         margin-top: -30px;
         margin-right: 10px;
+    }
+
+    @media(max-width: 768px) {
+        .top-right {
+            float: none;
+            width: 100%;
+            margin-top: 10px;
+            margin-right: 0;
+            margin-left: 0;
+            top: 0;
+            right: 0;
+        }
     }
 
     .btn-group {
@@ -209,13 +225,26 @@
     <div class="jumbotron" id="profile-section">
         <h3>Vos informations</h3>
 
-        <!--
-        <form id="profile">
 
-            <input type="text">
+        <form id="bot-form">
+
+            <div class="form-group">
+                <input type="checkbox" id="auto" name="auto">
+                <label for="auto">Lancer le bot automatiquement au chargement de la page</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="only_with_description" name="only_with_description" >
+                <label for="only_with_description">Dislike automatiquement les profils sans description</label>
+            </div>
+            <div class="form-group">
+                <label for="words_to_exclude">Liste de mots à exclure (1 par ligne)</label>
+                <textarea id="words_to_exclude" class="form-control" name="words_to_exclude" placeholder="Mots à exclure" ></textarea>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Enregistrer">
 
         </form>
-        -->
+
         <pre class="profile"></pre>
     </div>
 

@@ -1,6 +1,6 @@
 <div class="container mg-top-100">
     <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-12 offset-0 offset-md-3 col-md-6">
             <form method="POST" action="login/sms/confirm" class="jumbotron">
                 <h4 class="text-center">Terminez votre connexion</h4>
                 <p class="text-center">Entrez le code à 6 chiffres reçu par SMS</p>
