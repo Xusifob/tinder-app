@@ -77,8 +77,6 @@ function loadBotInfos() {
 
     let bot = getLocalStorage('bot');
 
-    console.log(bot);
-
     $.each(bot,function (k, v) {
         let input = $('#bot-form #' + v.name);
 
@@ -109,7 +107,7 @@ function loadFavorites() {
         data : {
             results : favorites,
         }
-    });
+    },true);
 
 }
 
@@ -354,7 +352,7 @@ $('.start-bot').on('click',function () {
     let $interval = setInterval(function () {
 
         if(profiles[i]) {
-            $(profiles[i]).find('[data-action="unlike"]').click();
+             $(profiles[i]).find('[data-action="unlike"]').click();
 
         } else {
             clearInterval($interval);
@@ -381,6 +379,8 @@ function doBotAction(profile)
 
     let bio = data.user.bio;
 
+    let rex = [];
+
     $.each(bot,function (k, v) {
 
         if(v.name === 'only_with_description' && v.value === 'on') {
@@ -397,24 +397,26 @@ function doBotAction(profile)
         if(v.name === "words_to_exclude") {
             let words = v.value.split("\n");
 
-            bio = bio.trim();
 
             $.each(words,function (k, word) {
-                let regex = new RegExp(word,'gmi');
 
-                console.log(bio.match(regex),bio,regex);
+                word = word.trim();
 
-                if(bio.match(regex)) {
-                    to_pass = true;
-                }
-
+                rex.push(new RegExp(word, "igm"));
             })
 
         }
 
     });
 
+    rex.forEach(function (regex) {
 
+        if(bio.match(regex)) {
+            to_pass = true;
+            return;
+        }
+
+    });
 
     if(to_pass) {
         profile.addClass('to-pass');
@@ -464,6 +466,11 @@ $('body').on('click','.action',function () {
                 displayAlert(action);
             }
 
+
+            if(action == 'superlike') {
+                elem.find('.remove-from-favorite').click();
+                return;
+            }
 
             elem.parent().remove();
 

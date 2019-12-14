@@ -245,7 +245,10 @@
 
         </form>
 
-        <pre class="profile"></pre>
+        <details>
+            Afficher les informations du compte
+            <pre class="profile"></pre>
+        </details>
     </div>
 
 
