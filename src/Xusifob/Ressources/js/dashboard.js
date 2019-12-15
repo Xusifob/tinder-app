@@ -64,8 +64,8 @@ $('#bot-form').on('submit',function(e) {
 });
 
 $(document).ready(function () {
-    // loadMatches();
-    // loadGold();
+    loadMatches();
+    loadGold();
     loadFavorites();
     loadProfile();
     loadBotInfos();
