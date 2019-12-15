@@ -232,6 +232,11 @@
                 <input type="checkbox" id="auto" name="auto">
                 <label for="auto">Lancer le bot automatiquement au chargement de la page</label>
             </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="auto_super_like" name="auto_super_like">
+                <label for="auto_super_like">Super liker automatiquement les profils en favoris ( L'onglet doit rester ouvert dans le navigateur)</label>
+            </div>
             <div class="form-group">
                 <input type="checkbox" id="only_with_description" name="only_with_description" >
                 <label for="only_with_description">Dislike automatiquement les profils sans description</label>

@@ -1,5 +1,5 @@
 var place;
-
+var nextSuperLike;
 
 /**
  *
@@ -64,11 +64,10 @@ $('#bot-form').on('submit',function(e) {
 });
 
 $(document).ready(function () {
-    loadMatches();
-    loadGold();
+    // loadMatches();
+    // loadGold();
     loadFavorites();
     loadProfile();
-
     loadBotInfos();
 });
 
@@ -93,6 +92,21 @@ function loadBotInfos() {
 }
 
 
+function getBotSetting(key) {
+
+    let bot = getLocalStorage('bot');
+
+    let value;
+
+    $.each(bot,function (k, v) {
+        if(v.name === key) {
+            value = v.value;
+        }
+    });
+
+    return value;
+}
+
 function loadFavorites() {
 
     let favorites = getLocalStorage('favorites');
@@ -109,6 +123,29 @@ function loadFavorites() {
         }
     },true);
 
+
+    let auto_like = getBotSetting('auto_super_like');
+
+    if(auto_like) {
+        // Check to auto like favorite every min
+        setInterval(autoLikeFavorites,1000*5);
+        autoLikeFavorites();
+    }
+}
+
+function autoLikeFavorites() {
+
+    if(nextSuperLike) {
+        if(nextSuperLike > new Date()) {
+            return;
+        }
+    }
+
+    let user = $($('#favorites').find('.user')[0]);
+
+    if(user) {
+        user.find('[data-action="superlike"]').click();
+    }
 }
 
 function loadProfile() {
@@ -161,16 +198,13 @@ function loadMatches(wipe) {
 
         location.hash = '#matches-section';
 
-        let bot = getLocalStorage('bot');
+        let start_bot = getBotSetting('auto');
 
-        $.each(bot,function (k, v) {
-            if(v.name === 'auto' && "on" === v.value) {
-                // Launch the bot after loading
-                $('.start-bot').click();
-                return;
-            }
-        })
-
+        if(start_bot) {
+            // Launch the bot after loading
+            $('.start-bot').click();
+            return;
+        }
 
     }).fail(function (response) {
         handle401(response);
@@ -250,7 +284,6 @@ $('body').on('click','.remove-from-favorite',function () {
  */
 function displayMatches(id,data,wipe)
 {
-
     let wrapper = $('#' + id);
 
     let template = $('.'+ id +'-template');
@@ -352,7 +385,7 @@ $('.start-bot').on('click',function () {
     let $interval = setInterval(function () {
 
         if(profiles[i]) {
-             $(profiles[i]).find('[data-action="unlike"]').click();
+            $(profiles[i]).find('[data-action="unlike"]').click();
 
         } else {
             clearInterval($interval);
@@ -458,9 +491,13 @@ $('body').on('click','.action',function () {
                 displayAlert('match');
             }
 
-
             if(data.limit_exceeded === true) {
                 displayAlert('limit_exceeded');
+
+                if(action == 'superlike') {
+                    nextSuperLike = new Date(data.super_likes.resets_at);
+                }
+
                 return;
             } else {
                 displayAlert(action);
