@@ -242,6 +242,10 @@
                 <label for="only_with_description">Dislike automatiquement les profils sans description</label>
             </div>
             <div class="form-group">
+                <input type="checkbox" id="only_with_photo" name="only_with_photo" >
+                <label for="only_with_photo">Dislike automatiquement les profils sans photo</label>
+            </div>
+            <div class="form-group">
                 <label for="words_to_exclude">Liste de mots à exclure (1 par ligne)</label>
                 <textarea id="words_to_exclude" class="form-control" name="words_to_exclude" placeholder="Mots à exclure" ></textarea>
             </div>

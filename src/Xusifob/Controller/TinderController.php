@@ -245,6 +245,8 @@ class TinderController extends Controller
     public function matchesAction($matches = array())
     {
 
+       // $matches = file_get_contents(__DIR__ . '/../../../public/matches.json');
+       // return new JsonResponse($matches,200,array(),true);
 
         $matches = $this->tinderService->getMatchs();
 

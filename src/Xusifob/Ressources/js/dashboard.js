@@ -416,12 +416,20 @@ function doBotAction(profile)
 
     $.each(bot,function (k, v) {
 
+        if(v.name === 'only_with_photo' && v.value === 'on') {
+            if(data.user.photos[0].id === 'unknown') {
+                to_pass = true;
+                return;
+            }
+        }
         if(v.name === 'only_with_description' && v.value === 'on') {
             if(!bio) {
                 to_pass = true;
                 return;
             }
         }
+
+
 
         if(to_pass) {
             return;
