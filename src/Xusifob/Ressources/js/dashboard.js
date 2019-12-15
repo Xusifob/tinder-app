@@ -128,7 +128,7 @@ function loadFavorites() {
 
     if(auto_like) {
         // Check to auto like favorite every min
-        setInterval(autoLikeFavorites,1000*5);
+        setInterval(autoLikeFavorites,1000*60);
         autoLikeFavorites();
     }
 }

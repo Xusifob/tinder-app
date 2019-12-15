@@ -235,7 +235,7 @@
 
             <div class="form-group">
                 <input type="checkbox" id="auto_super_like" name="auto_super_like">
-                <label for="auto_super_like">Super liker automatiquement les profils en favoris ( L'onglet doit rester ouvert dans le navigateur)</label>
+                <label for="auto_super_like">Super liker automatiquement les profils en favoris (L'onglet doit rester ouvert dans le navigateur)</label>
             </div>
             <div class="form-group">
                 <input type="checkbox" id="only_with_description" name="only_with_description" >
