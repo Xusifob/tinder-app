@@ -250,6 +250,11 @@
                 <textarea id="words_to_exclude" class="form-control" name="words_to_exclude" placeholder="Mots à exclure" ></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="names_to_exclude">Liste de prénoms à exclure (1 par ligne)</label>
+                <textarea id="names_to_exclude" class="form-control" name="names_to_exclude" placeholder="Prénoms à exclure" ></textarea>
+            </div>
+
             <input type="submit" class="btn btn-primary" value="Enregistrer">
 
         </form>

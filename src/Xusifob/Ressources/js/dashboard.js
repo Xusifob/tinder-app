@@ -60,6 +60,7 @@ $('#bot-form').on('submit',function(e) {
 
     e.preventDefault();
 
+    loadMatches(true);
 
 });
 
@@ -410,9 +411,8 @@ function doBotAction(profile)
 
     let data = profile.data('profile');
 
-    let bio = data.user.bio;
-
-    let rex = [];
+    let bio = data.user.bio.trim();
+    let name = data.user.name.trim();
 
     $.each(bot,function (k, v) {
 
@@ -439,22 +439,41 @@ function doBotAction(profile)
             let words = v.value.split("\n");
 
 
-            $.each(words,function (k, word) {
+            $.each(words, function (k, word) {
 
                 word = word.trim();
+                if (word) {
+                    let rex = (new RegExp(word, "igm"));
 
-                rex.push(new RegExp(word, "igm"));
-            })
+                    if (bio.match(rex)) {
+                        to_pass = true;
+                        console.log('Matching :', bio, rex);
+                        return;
+                    }
+
+                }
+            });
 
         }
 
-    });
+        if(v.name === "names_to_exclude") {
+            let words = v.value.split("\n");
 
-    rex.forEach(function (regex) {
+            $.each(words,function (k, word) {
 
-        if(bio.match(regex)) {
-            to_pass = true;
-            return;
+                word = word.trim();
+                if(word) {
+                    let rex = (new RegExp(word, "igm"));
+
+                    if(name.match(rex)) {
+                        to_pass = true;
+                        console.log('Matching :',name,rex);
+                        return;
+                    }
+
+                }
+            })
+
         }
 
     });
